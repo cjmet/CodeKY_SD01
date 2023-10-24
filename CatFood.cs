@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace CodeKY_SD01
 {
@@ -35,9 +36,7 @@ namespace CodeKY_SD01
 			} while (!(userInput.StartsWith("y") || userInput.StartsWith("n")));
 			if (userInput.StartsWith("y")) this.KittenFood = true;
 			else if (userInput.StartsWith("n")) this.KittenFood = false;
-			else { throw new Exception(); }
-			
-
+			else { Debug.Assert(false); }
 		}
 	}
 }
