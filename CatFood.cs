@@ -15,6 +15,13 @@ namespace CodeKY_SD01
 		[JsonPropertyOrder(11)]
 		public bool KittenFood;
 
+
+		public CatFood() {}
+
+		public CatFood(string name, string description, decimal price, int quantity, double weight, bool isKittenFood)
+		{
+			AddCatFood(name, description, price, quantity, weight, isKittenFood);
+		}	
 		public void AddCatFood ()
 		{
 			this.AddProduct();
@@ -38,5 +45,13 @@ namespace CodeKY_SD01
 			else if (userInput.StartsWith("n")) this.KittenFood = false;
 			else { Debug.Assert(false); }
 		}
+
+		public void AddCatFood(string name, string description, decimal price, int quantity, double weight,bool isKittenFood)
+		{
+			this.AddProduct(name,description,price,quantity);
+			this.Weight = weight;
+			this.KittenFood = isKittenFood;
+		}
+
 	}
 }

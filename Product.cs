@@ -10,9 +10,9 @@ namespace CodeKY_SD01
 	public class Product
 	{
 		[JsonPropertyOrder(1)]
-		public string? Name;
+		public string Name;
 		[JsonPropertyOrder(2)]
-		public string? Description;
+		public string Description;
 		[JsonPropertyOrder(3)]
 		public decimal Price;
 		[JsonPropertyOrder(4)]
@@ -51,6 +51,14 @@ namespace CodeKY_SD01
 				} while (!int.TryParse(userInput, out i));
 				this.Quantity = i;
 			}
+		}
+
+		public void AddProduct(string name, string description, decimal price, int quantity)
+		{
+			this.Name = name;
+			this.Description = description;
+			this.Price = price;
+			this.Quantity = quantity;
 		}
 	}
 
