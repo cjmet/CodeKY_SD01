@@ -11,7 +11,7 @@ namespace CodeKY_SD01
 	public class CatFood : Product
 	{
 		[JsonPropertyOrder(10)]
-		public double Weight;
+		public virtual double Weight { get; set; }
 		[JsonPropertyOrder(11)]
 		public bool KittenFood;
 
