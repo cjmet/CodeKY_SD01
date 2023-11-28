@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace CodeKY_SD01
 {
-	public class ProductLogic
+	public class ProductLogic : IProductLogic
 	{
 		// private List<Product> _products = new List<Product>();
 		private Dictionary<string, Product> _products = new Dictionary<string, Product>();
@@ -21,6 +21,7 @@ namespace CodeKY_SD01
 
 			this.AddProduct(new CatFood("Kitten Chow", "A Delicious Bag of Kitten Chow", 9.87m, 65, 4.32, true));
 			this.AddProduct(new CatFood("Kittendines", "A Delicious Bag of Sardines just for Kittens", 8.87m, 55, 3.32, true));
+			this.AddProduct(new CatFood("Void's Vittles for Kittens", "An Empty Bag of Kitten Food", 6.66m, 0, 0.01, true));
 			this.AddProduct(new CatFood("Kitten Kuts", "A Delicious Bag of Choped Steak for Kittens", 19.87m, 15, 2.32, true));
 			this.AddProduct(new CatFood("Bad Boy Bumble Bees", "A Delicious Bag of Dried Bumble Bees.  The Purrfect Snack for your one eyed Pirate Cats", 29.87m, 5, 1.32, false));
 
@@ -53,6 +54,26 @@ namespace CodeKY_SD01
 			List<Product> _list = new List<Product>();
 			foreach (var item in  _products) { _list.Add(item.Value); }
 			return _list;
+		}
+
+		public List<Product> GetOnlyInStockProducts()
+		{
+			var query =
+				from item in _products
+				where item.Value.Quantity > 0
+				select item.Value;
+			var results = query.ToList();
+			return results;
+		}
+
+		public List<String> GetOnlyInStockProductsByName()
+		{
+			var query =
+				from item in _products
+				where item.Value.Quantity > 0
+				select item.Value.Name;
+				var results = query.ToList();
+				return results;
 		}
 
 		// Return the dogleash or null

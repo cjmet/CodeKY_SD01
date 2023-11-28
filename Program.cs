@@ -25,6 +25,8 @@ namespace CodeKY_SD01
 				Console.WriteLine("Press 2 to view a Cat Food by name.");
 				Console.WriteLine("Press 8 to search a list of products for a keyword.");
 				Console.WriteLine("Press 9 to view a list of products.");
+				Console.WriteLine("Press 10 to view a list of In-Stock products by Name.");
+				Console.WriteLine("Press 11 to view a list of In-Stock products by Product.");
 				Console.WriteLine("Type 'exit' to quit.");
 
 				userInput = Console.ReadLine();
@@ -85,20 +87,58 @@ namespace CodeKY_SD01
 							break;
 						}
 					case "9":
-						var list = productLogic.GetAllProducts();
-						if (list != null && list.Count > 0)
 						{
-							Console.WriteLine("The Following is a list of all Items.");
-							foreach (var item in productLogic.GetAllProducts())
+							var list = productLogic.GetAllProducts();
+							if (list != null && list.Count > 0)
 							{
-								Console.WriteLine(item.Name);
+								Console.WriteLine("The Following is a list of all Items.");
+								foreach (var item in productLogic.GetAllProducts())
+								{
+									Console.WriteLine(item.Name);
+								}
 							}
+							else
+							{
+								Console.WriteLine("Item List is Empty");
+							}
+							break;
 						}
-						else
+					case "10":
 						{
-							Console.WriteLine("Item List is Empty");
+							var list = productLogic.GetOnlyInStockProductsByName();
+							if (list != null && list.Count > 0)
+							{
+								Console.WriteLine("The Following is a list of all In-Stock Items.");
+								foreach (var item in list)
+								{
+									Console.WriteLine(item);
+								}
+							}
+							else
+							{
+								Console.WriteLine("Item List is Empty");
+							}
+							break;
 						}
-						break;
+					case "11":
+						{
+							var list = productLogic.GetOnlyInStockProducts();
+							if (list != null && list.Count > 0)
+							{
+								Console.WriteLine("The Following is a list of all In-Stock Items.");
+								Console.WriteLine();
+								foreach (var result in list)
+								{
+									Console.WriteLine(JsonSerializer.Serialize(result, new JsonSerializerOptions { IncludeFields = true, WriteIndented = true }));
+								}
+								Console.WriteLine($"{list.Count} Items Found.");
+							}
+							else
+							{
+								Console.WriteLine("Item List is Empty");
+							}
+							break;
+						}
 					case "exit": Console.WriteLine("exit"); break;
 					case "quit": Console.WriteLine("quit"); break;
 					case "": Console.WriteLine("<empty>"); break;
