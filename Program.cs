@@ -1,10 +1,11 @@
-﻿using CodeKY_SD01;
+﻿using CodeKY_SD01.Logic;
+using CodeKY_SD01.Products;
 using System.Diagnostics;
 using System.Text.Json;
 
 namespace CodeKY_SD01
 {
-	internal class Program
+    internal class Program
 	{
 		static void Main(string[] args)
 		{
