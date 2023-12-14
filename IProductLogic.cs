@@ -14,6 +14,7 @@ namespace CodeKY_SD01
 		public CatFood GetCatFoodByName(string name);
 		public List<Product> SearchProducts(string name);
 		public List<Product> GetOnlyInStockProducts();
+		public decimal GetTotalPriceOfInventory();
 		public List<String> GetOnlyInStockProductsByName();
 	}
 }

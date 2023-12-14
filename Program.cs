@@ -21,17 +21,27 @@ namespace CodeKY_SD01
 
 			do
 			{
+				Console.WriteLine();
+				Console.WriteLine();
+				Console.WriteLine("----------------------------------------------------------");
 				Console.WriteLine("Press 1 to add a product.");
 				Console.WriteLine("Press 2 to view a Cat Food by name.");
+				Console.WriteLine();
 				Console.WriteLine("Press 8 to search a list of products for a keyword.");
 				Console.WriteLine("Press 9 to view a list of products.");
+				Console.WriteLine();
 				Console.WriteLine("Press 10 to view a list of In-Stock products by Name.");
 				Console.WriteLine("Press 11 to view a list of In-Stock products by Product.");
+				Console.WriteLine();
+				Console.WriteLine("Press 20 to view a total value of In-Stock inventory");
+				Console.WriteLine();
 				Console.WriteLine("Type 'exit' to quit.");
 
 				userInput = Console.ReadLine();
 				userInput = userInput.Trim();
 				userInput = userInput.ToLower();
+				Console.WriteLine();
+				Console.WriteLine("-=========================================================");
 				Console.WriteLine();
 
 				switch (userInput)
@@ -137,6 +147,12 @@ namespace CodeKY_SD01
 							{
 								Console.WriteLine("Item List is Empty");
 							}
+							break;
+						}
+					case "20":
+						{
+							var total = productLogic.GetTotalPriceOfInventory();
+							Console.WriteLine($"The Total Value of all In-Stock Items is: {total}");
 							break;
 						}
 					case "exit": Console.WriteLine("exit"); break;

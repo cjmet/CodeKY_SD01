@@ -58,12 +58,20 @@ namespace CodeKY_SD01
 
 		public List<Product> GetOnlyInStockProducts()
 		{
-			var query =
-				from item in _products
-				where item.Value.Quantity > 0
-				select item.Value;
-			var results = query.ToList();
-			return results;
+			//var query =
+			//	from item in _products
+			//	where item.Value.Quantity > 0
+			//	select item.Value;
+			//var results = query.ToList();
+			//return results;
+
+			return _products.Values.ToList().InStock();
+		}
+
+		public decimal GetTotalPriceOfInventory ()
+		{
+			//return _products.Values.ToList().InStock().Sum(item => item.Price * item.Quantity);
+			return this.GetOnlyInStockProducts().Sum(item => item.Price * item.Quantity); 
 		}
 
 		public List<String> GetOnlyInStockProductsByName()
