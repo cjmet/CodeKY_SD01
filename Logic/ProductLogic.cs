@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using CodeKY_SD01.Extensions;
 using CodeKY_SD01.Interfaces;
 using CodeKY_SD01.Products;
+using CodeKY_SD01.Validators;
+using FluentValidation;
+using FluentValidation.Results;
 
 namespace CodeKY_SD01.Logic
 {
@@ -24,17 +28,31 @@ namespace CodeKY_SD01.Logic
 
             AddProduct(new CatFood("Kitten Chow", "A Delicious Bag of Kitten Chow", 9.87m, 65, 4.32, true));
             AddProduct(new CatFood("Kittendines", "A Delicious Bag of Sardines just for Kittens", 8.87m, 55, 3.32, true));
-            AddProduct(new CatFood("Void's Vittles for Kittens", "An Empty Bag of Kitten Food", 6.66m, 0, 0.01, true));
+            AddProduct(new CatFood("Void's Vittles for Kittens", "An Empty Bag of Kitten Food", 6.66m, 1, 0.01, true));
             AddProduct(new CatFood("Kitten Kuts", "A Delicious Bag of Choped Steak for Kittens", 19.87m, 15, 2.32, true));
             AddProduct(new CatFood("Bad Boy Bumble Bees", "A Delicious Bag of Dried Bumble Bees.  The Purrfect Snack for your one eyed Pirate Cats", 29.87m, 5, 1.32, false));
 
             Console.WriteLine();
         }
 
+		public Product GetTestProduct()
+		{
+			Console.WriteLine("Creating a Test Product");
+    		return (Product) new CatFood("Soylent Green for Kittens", "Saving the World one Kitten at a Time.", 6.67m, 96, 7.66, true);
+		}
 
-        public void AddProduct(Product product)
+		public void AddProduct(Product product)
         {
-            _products.Add(product.Name.ToLower(), product);
+			ProductValidator validator = new ProductValidator();
+            ValidationResult result = validator.Validate(product);
+            if (!result.IsValid)
+            {
+                string s = JsonSerializer.Serialize(product, new JsonSerializerOptions { IncludeFields = true, WriteIndented = true });
+                result.Errors.Add(new ValidationFailure("product", s));
+                throw new ValidationException(result.Errors);
+            }
+
+			_products.Add(product.Name.ToLower(), product);
 
             if (product is DogLeash)
             {
@@ -98,8 +116,15 @@ namespace CodeKY_SD01.Logic
             return _dogLeashs.ContainsKey(name) ? _dogLeashs[name] : null;
         }
 
-        // Return the catfood or null
-        public CatFood GetCatFoodByName(string name)
+		public T GetProductByName <T> (string name) where T : Product
+		{
+			name = name.ToLower();
+                        
+            return (_products.ContainsKey(name) ? _products[name] : null) as T;
+		}
+
+		// Return the catfood or null
+		public CatFood GetCatFoodByName(string name)
         {
             name = name.ToLower();
             return _catFoods.ContainsKey(name) ? _catFoods[name] : null;

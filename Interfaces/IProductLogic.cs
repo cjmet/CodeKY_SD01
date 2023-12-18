@@ -17,5 +17,9 @@ namespace CodeKY_SD01.Interfaces
         public List<Product> GetOnlyInStockProducts();
         public decimal GetTotalPriceOfInventory();
         public List<string> GetOnlyInStockProductsByName();
-    }
+        public void DebugDatabaseInit();
+        public Product GetTestProduct();
+        public T GetProductByName<T>(string name) where T : Product;
+
+	}
 }

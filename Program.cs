@@ -1,20 +1,26 @@
-﻿using CodeKY_SD01.Logic;
+﻿using CodeKY_SD01.Interfaces;
+using CodeKY_SD01.Logic;
 using CodeKY_SD01.Products;
+using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics;
 using System.Text.Json;
 
+
 namespace CodeKY_SD01
 {
-    internal class Program
+	internal class Program
 	{
 		static void Main(string[] args)
 		{
-			var productLogic = new ProductLogic();
-			
-			#if DEBUG 
-			productLogic.DebugDatabaseInit(); 
+
+			var services = CreateServiceCollection();
+			//var productLogic = new ProductLogic();
+			var productLogic = services.GetService<IProductLogic>();
+
+			#if DEBUG
+			productLogic.DebugDatabaseInit();
 			#endif
-			
+
 			string userInput;
 			Console.WriteLine("Welcome to our Pet Shop!");
 			Console.WriteLine("------------------------");
@@ -35,6 +41,8 @@ namespace CodeKY_SD01
 				Console.WriteLine("Press 11 to view a list of In-Stock products by Product.");
 				Console.WriteLine();
 				Console.WriteLine("Press 20 to view a total value of In-Stock inventory");
+				Console.WriteLine("Press 21 to import a JSON encoded product");
+				Console.WriteLine("Press 22 to find any product by name");
 				Console.WriteLine();
 				Console.WriteLine("Type 'exit' to quit.");
 
@@ -54,9 +62,9 @@ namespace CodeKY_SD01
 
 						productLogic.AddProduct(catChow);
 
-						#if DEBUG
-							Console.WriteLine(JsonSerializer.Serialize(catChow, new JsonSerializerOptions { IncludeFields = true, WriteIndented = true }));
-						#endif
+#if DEBUG
+						Console.WriteLine(JsonSerializer.Serialize(catChow, new JsonSerializerOptions { IncludeFields = true, WriteIndented = true }));
+#endif
 
 						Console.WriteLine("Product Added.");
 						break;
@@ -65,7 +73,7 @@ namespace CodeKY_SD01
 							Console.WriteLine("Enter the Cat Food you wish to view.");
 							string userInput2 = Console.ReadLine();
 							userInput2 = userInput2.Trim();
-							CatFood catFood = productLogic.GetCatFoodByName(userInput2);
+							CatFood catFood = productLogic.GetProductByName<CatFood>(userInput2);
 							if (catFood != null)
 							{
 								Console.WriteLine(JsonSerializer.Serialize(catFood, new JsonSerializerOptions { IncludeFields = true, WriteIndented = true }));
@@ -156,17 +164,61 @@ namespace CodeKY_SD01
 							Console.WriteLine($"The Total Value of all In-Stock Items is: {total}");
 							break;
 						}
+					case "21":
+						{
+							Console.WriteLine("Importing a JSON Encoded Product.");
+							Console.WriteLine("Paste JSON code here:");
+							Product product;
+							string jsonInput;
+							Boolean TEST=false;
+							if (TEST)
+							{
+								product = productLogic.GetTestProduct();
+								jsonInput = JsonSerializer.Serialize(product, new JsonSerializerOptions { IncludeFields = true, WriteIndented = true });
+							}
+							else
+							{
+								jsonInput = Console.ReadLine();
+							}
+							product = JsonSerializer.Deserialize<Product>(jsonInput, new JsonSerializerOptions { IncludeFields = true, WriteIndented = true });
+							productLogic.AddProduct(product);
+							
+							Console.WriteLine("Product Added.");
+							break;
+						}
+					case "22":
+						{
+							Console.WriteLine("Enter the Product you wish to view.");
+							string userInput2 = Console.ReadLine();
+							userInput2 = userInput2.Trim();
+							Product product = productLogic.GetProductByName<Product>(userInput2);
+							if (product != null)
+							{
+								Console.WriteLine(JsonSerializer.Serialize(product, new JsonSerializerOptions { IncludeFields = true, WriteIndented = true }));
+							}
+							else
+							{
+								Console.WriteLine($"Product '{userInput2}' was not found.");
+							}
+							break;
+						}
 					case "exit": Console.WriteLine("exit"); break;
 					case "quit": Console.WriteLine("quit"); break;
 					case "": Console.WriteLine("<empty>"); break;
 					default: Console.WriteLine($"I do not recognize '{userInput}' as a valid input."); break;
 				}
+
 				Console.WriteLine();
 
-			} while (!(userInput.Equals("exit", StringComparison.OrdinalIgnoreCase) 
+			} while (!(userInput.Equals("exit", StringComparison.OrdinalIgnoreCase)
 				|| userInput.Equals("quit", StringComparison.OrdinalIgnoreCase)
-				||  userInput.Equals("", StringComparison.OrdinalIgnoreCase)
+				|| userInput.Equals("", StringComparison.OrdinalIgnoreCase)
 				));
 		}
+		static IServiceProvider CreateServiceCollection()
+		{
+			return new ServiceCollection().AddTransient<IProductLogic, ProductLogic>().BuildServiceProvider();
+		}
 	}
+
 }
