@@ -9,6 +9,8 @@ namespace CodeKY_SD01.Products
 {
     public class Product
     {
+        [JsonPropertyOrder(0)]
+        public int Id;
         [JsonPropertyOrder(1)]
         public string Name;
         [JsonPropertyOrder(2)]
