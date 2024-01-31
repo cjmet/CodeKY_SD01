@@ -6,6 +6,13 @@ using System.Diagnostics;
 using System.Text.Json;
 
 
+// q: what does solid stand for in OO programming
+// a: Single Responsibility, Open-Closed, Liskov Substitution, Interface Segregation, Dependency Inversion
+
+// q: what is a class
+// a: a class is a blueprint for an object
+
+
 namespace CodeKY_SD01
 {
 	internal class Program
